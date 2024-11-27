@@ -1,16 +1,22 @@
 {
   "name": "server",
   "version": "1.0.0",
+  "description": "",
   "main": "./build/index.js",
   "scripts": {
-    "start":"node ./build/index.js",
     "dev": "nodemon index.ts",
-    "build":"tsc"
+    "start": "node ./build/index.js",
+    "build": "tsc"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "devDependencies": {
+    "nodemon": "^3.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
   "dependencies": {
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.7.4"
   }
 }
