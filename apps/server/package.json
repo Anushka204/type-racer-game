@@ -1,0 +1,16 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "./build/index.js",
+  "scripts": {
+    "start":"node ./build/index.js",
+    "dev": "nodemon index.ts",
+    "build":"tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "socket.io": "^4.8.1"
+  }
+}

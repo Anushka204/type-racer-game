@@ -1,102 +1,76 @@
-import Image, { type ImageProps } from "next/image";
-import { Button } from "@repo/ui/button";
-import styles from "./page.module.css";
+"use client";
 
-type Props = Omit<ImageProps, "src"> & {
-  srcLight: string;
-  srcDark: string;
-};
-
-const ThemeImage = (props: Props) => {
-  const { srcLight, srcDark, ...rest } = props;
-
-  return (
-    <>
-      <Image {...rest} src={srcLight} className="imgLight" />
-      <Image {...rest} src={srcDark} className="imgDark" />
-    </>
-  );
-};
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
+import { FormEvent } from "react";
+import { toast } from "sonner";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <ThemeImage
-          className={styles.logo}
-          srcLight="turborepo-dark.svg"
-          srcDark="turborepo-light.svg"
-          alt="Turborepo logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>apps/web/app/page.tsx</code>
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const router = useRouter();
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new/clone?demo-description=Learn+to+implement+a+monorepo+with+a+two+Next.js+sites+that+has+installed+three+local+packages.&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F4K8ZISWAzJ8X1504ca0zmC%2F0b21a1c6246add355e55816278ef54bc%2FBasic.png&demo-title=Monorepo+with+Turborepo&demo-url=https%3A%2F%2Fexamples-basic-web.vercel.sh%2F&from=templates&project-name=Monorepo+with+Turborepo&repository-name=monorepo-turborepo&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fturborepo%2Ftree%2Fmain%2Fexamples%2Fbasic&root-directory=apps%2Fdocs&skippable-integrations=1&teamSlug=vercel&utm_source=create-turbo"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://turbo.build/repo/docs?utm_source"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+  function joinGame(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    const inviteCode = formData.get("inviteCode") as string;
+
+    if (!inviteCode) return toast.error("Invite code is required");
+
+    router.push(`/game/${inviteCode}`);
+  }
+
+  function createGame() {
+    const inviteCode = uuidv4();
+    router.push(`/game/${inviteCode}`);
+  }
+
+  return (
+    <main className="w-full mx-auto max-w-5xl p-5">
+      <h1 className="font-bold text-4xl mt-10">Typing Battle</h1>
+      <p className="mt-5 text-gray-400 text-lg">
+        Go on a typing battle with your friends and see which one of you types
+        the most in under a minute! Create or join a game to get started. You
+        can play with yourself too.
+      </p>
+      <Card className="p-5 mt-10 grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="p-5 flex flex-col justify-between">
+          <div>
+            <h2 className="font-medium text-2xl">Create Game</h2>
+            <p className="text-gray-400 mt-5">
+              Create a game and invite your friends to join you and race you to
+              a typing battle! You will receive an invite code once you create a
+              game. You will be the host of the game.
+            </p>
+          </div>
+
+          <div>
+            <Button className="mt-5 w-full" onClick={createGame}>
+              Create Game
+            </Button>
+          </div>
         </div>
-        <Button appName="web" className={styles.secondary}>
-          Open alert
-        </Button>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com/templates?search=turborepo&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://turbo.build?utm_source=create-turbo"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to turbo.build →
-        </a>
-      </footer>
-    </div>
+
+        <div className="p-5 flex flex-col justify-between">
+          <div>
+            <h2 className="font-medium text-2xl">Join Game</h2>
+            <p className="text-gray-400 mt-5">
+              Enter your invite code and join your friends to battle them in a
+              typing race. Let the best person win!
+            </p>
+          </div>
+
+          <div className="mt-5">
+            <form onSubmit={joinGame}>
+              <Input type="text" placeholder="Invite code" name="inviteCode" />
+              <Button className="mt-3 w-full">Join Game</Button>
+            </form>
+          </div>
+        </div>
+      </Card>
+    </main>
   );
 }
